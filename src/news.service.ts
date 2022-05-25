@@ -1,6 +1,6 @@
 import { NewsDto } from './dto/news.dto';
 
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { uuid } from 'uuidv4'
 import { NewsItems } from './interfaces/newsItems.interface'
 

@@ -1,7 +1,8 @@
 import { NewsItems } from './interfaces/newsItems.interface';
 import { NewsDto } from './dto/news.dto';
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common'
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpStatus, Res, HttpException, BadRequestException } from '@nestjs/common'
 import { NewsService } from './news.service'
+
 
 @Controller('news')
 export class NewsController {
@@ -18,22 +19,38 @@ export class NewsController {
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.NOT_FOUND)
-  getNewsById(@Param('id') id: string): Promise<NewsItems | null> {
-    return this.newsService.findById(id)
+  async getNewsById(@Res() res, @Param('id') id: string) {
+    const news: NewsItems = await this.newsService.findById(id);
+    if (news === undefined) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: `news with id: ${id}, not found`,
+      }, HttpStatus.NOT_FOUND);
+    }
+    else {
+      res.status(HttpStatus.OK).json(news).send();
+    }
   }
 
   @Put(':id')
-  @HttpCode(HttpStatus.NOT_FOUND)
-  update(
+  async update(
+    @Res() res,
     @Param('id') id: string,
     @Body() newsDto: NewsDto
-  ): Promise<NewsItems | null> {
-    return this.newsService.update(id, newsDto)
+  ) {
+    const news: NewsItems = await this.newsService.update(id, newsDto);
+    if (news === undefined) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: `news with id: ${id}, not found`,
+      }, HttpStatus.NOT_FOUND);
+    }
+    else {
+      res.status(HttpStatus.OK).json(news).send();
+    }
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NOT_FOUND)
   remove(@Param('id') id: string): Promise<void | null> {
     return this.newsService.remove(id)
   }
