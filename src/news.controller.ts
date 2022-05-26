@@ -19,39 +19,21 @@ export class NewsController {
   }
 
   @Get(':id')
-  async getNewsById(@Res() res, @Param('id') id: string) {
-    const news: NewsItems = await this.newsService.findById(id);
-    if (news === undefined) {
-      throw new HttpException({
-        status: HttpStatus.NOT_FOUND,
-        error: `news with id: ${id}, not found`,
-      }, HttpStatus.NOT_FOUND);
-    }
-    else {
-      res.status(HttpStatus.OK).json(news).send();
-    }
+  async getNewsById(@Param('id') id: string): Promise<NewsItems | null> {
+    return this.newsService.findById(id);
   }
 
   @Put(':id')
   async update(
-    @Res() res,
     @Param('id') id: string,
     @Body() newsDto: NewsDto
-  ) {
-    const news: NewsItems = await this.newsService.update(id, newsDto);
-    if (news === undefined) {
-      throw new HttpException({
-        status: HttpStatus.NOT_FOUND,
-        error: `news with id: ${id}, not found`,
-      }, HttpStatus.NOT_FOUND);
-    }
-    else {
-      res.status(HttpStatus.OK).json(news).send();
-    }
+  ): Promise<NewsItems | null> {
+    return this.newsService.update(id, newsDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void | null> {
-    return this.newsService.remove(id)
+  async remove(@Param('id') id: string): Promise<void | null> {
+    return this.newsService.remove(id);
   }
+
 }
