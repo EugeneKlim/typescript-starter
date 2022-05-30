@@ -46,7 +46,6 @@ export class NewsController {
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void | null> {
-    // const news: NewsItems = await this.newsService.remove(id);
     if (this.newsService.remove(id) === undefined) {
       throw new NotFoundExceptionForService(id)
     } else {

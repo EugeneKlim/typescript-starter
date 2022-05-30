@@ -2,10 +2,6 @@
 import { Injectable } from '@nestjs/common'
 import { uuid } from 'uuidv4'
 import { NewsItems } from './interfaces/newsItems.interface'
-import { NotFoundExceptionForService } from './notFonud.exception';
-
-
-
 
 
 @Injectable()
